@@ -172,4 +172,4 @@ Next, the deconvolution was run and the output was generated:
 
 Survival analysis
 =================
-Please run sript(s) inside folder "SURVIVAL"
+Please run script(s) inside folder "SURVIVAL"
