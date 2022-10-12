@@ -111,7 +111,7 @@ a) Folder structure:
 │   ├── T.rds
 │   ├── P.rds (from IHC)
 │   ├── phenoDataC_clusters_wo_regrouping.txt
-├── example
+├── Toy_example
 │   ├── scC.rds
 │   ├── T.rds
 │   ├── P.rds
