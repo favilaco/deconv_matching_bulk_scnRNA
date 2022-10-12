@@ -143,7 +143,7 @@ The deconvolution problem is formulated as: T = C·P [see https://doi.org/10.109
 Make the following choices (in order):
 
 ```
-	i) specific dataset [from: "example","Cell_mixtures", "GSE141115", "AML", "Breast_cancer", "NB_1", "NB_2", "Synapse", "Brain"]
+	i) specific dataset [from: "Toy_example","Cell_mixtures", "GSE141115", "AML", "Breast_cancer", "NB_1", "NB_2", "Synapse", "Brain"]
 	ii) normalization strategy for the reference matrix [bulk (C): "none", "LogNormalize", "TMM", "TPM"] ; [single-cell: "none", "LogNormalize", "TMM", "TPM", "SCTransform", "scran", "scater"]
 	iii) normalization strategy for the mixture matrix (T)["none", "LogNormalize", "TMM", "TPM"]
 	iv) deconvolution method [from: "CIBERSORT", "nnls", "FARDEEP", "RLR", "MuSiC", "MuSiC_with_markers", "DWLS", "Janus"]
