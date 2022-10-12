@@ -4,7 +4,7 @@ Source code (R statistical programming language, v4.0.1) to reproduce the result
 
 DATASETS
 ========
-Here we provide an **example folder** (named "example"; see *"Folder requirements" & "Running the deconvolution"*) that can be directly used to test the framework. It contains an artificial single-cell RNA-seq dataset made of 5 artificial cell types where two of them are highly correlated (cell type 1 and 5); 1000 cells per cell type and 64 genes (of which 16 are marker genes, 4 per cell type and in different ranges of expression).
+Here we provide an **example folder** (named "Toy_example"; see *"Folder requirements" & "Running the deconvolution"*) that can be directly used to test the framework. It contains an artificial single-cell RNA-seq dataset made of 5 artificial cell types where two of them are highly correlated (cell type 1 and 5); 1000 cells per cell type and 64 genes (of which 16 are marker genes, 4 per cell type and in different ranges of expression).
 
 The **other external datasets used in the manuscript** (together with the necessary metadata) can be downloaded from their respective sources:
 
