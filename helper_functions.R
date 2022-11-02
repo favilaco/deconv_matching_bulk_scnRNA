@@ -216,7 +216,6 @@ Scaling <- function(matrix, option, phenoDataC=NULL){
                 data('gene_lengths')
             }
 
-
             A = intersect(rownames(counts),names(lengths))
             counts = as.matrix(counts[A,])
             lengths = lengths[A]
@@ -348,7 +347,7 @@ Scaling <- function(matrix, option, phenoDataC=NULL){
 Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRING = NULL, marker_distrib, refProfiles.var){ 
 
     bulk_methods = c("CIBERSORT","nnls","FARDEEP","RLR")
-    sc_methods = c("MuSiC","MuSiC_with_markers","DWLS","Janus")
+    sc_methods = c("MuSiC","MuSiC_with_markers","DWLS","SQUID")
 
     ########## Using marker information for bulk_methods
 
@@ -370,7 +369,6 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
         rownames(phenoDataC) = phenoDataC$cellID
         # establish same order in (sc)C and phenoDataC:
         phenoDataC <- phenoDataC[match(colnames(C),phenoDataC$cellID),]
-
 
         if(method %in% c("MuSiC","MuSiC_with_markers")){
 
@@ -465,7 +463,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
         RESULTS = apply(RESULTS,2,function(x) x/sum(x)) #explicit STO constraint
         print(head(RESULTS))
 
-    } else if (method == "Janus"){ 
+    } else if (method == "SQUID"){ 
             
         # Transforming T :
         Z = bulkC.fromSC(scC = C, phenoDataC = phenoDataC)
