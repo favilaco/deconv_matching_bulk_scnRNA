@@ -146,7 +146,7 @@ Make the following choices (in order):
 	i) specific dataset [from: "Toy_example","Cell_mixtures", "GSE141115", "AML", "Breast_cancer", "NB_1", "NB_2", "Synapse", "Brain"]
 	ii) normalization strategy for the reference matrix [bulk (C): "none", "LogNormalize", "TMM", "TPM"] ; [single-cell: "none", "LogNormalize", "TMM", "TPM", "SCTransform", "scran", "scater"]
 	iii) normalization strategy for the mixture matrix (T)["none", "LogNormalize", "TMM", "TPM"]
-	iv) deconvolution method [from: "CIBERSORT", "nnls", "FARDEEP", "RLR", "MuSiC", "MuSiC_with_markers", "DWLS", "Janus"]
+	iv) deconvolution method [from: "CIBERSORT", "nnls", "FARDEEP", "RLR", "MuSiC", "MuSiC_with_markers", "DWLS", "SQUID"]
 	v) indicate whether cell-type labels are included ("yes") or whether they should be obtained by unsupervised clustering ("no")
 ```
 
