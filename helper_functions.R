@@ -390,10 +390,10 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
 
     ###################################
 
-    if(method == "CIBERSORT"){ #without QN. By default, CIBERSORT performed QN (only) on the mixture.
+    if(method == "CIBERSORT"){ 
 
         RESULTS = CIBERSORT(sig_matrix = C, mixture_file = T, QN = FALSE) 
-        RESULTS = t(RESULTS[,1:(ncol(RESULTS)-3),drop=FALSE]) #needed for cases with only 1 mixture as input
+        RESULTS = t(RESULTS[,1:(ncol(RESULTS)-3),drop=FALSE]) 
 
     } else if (method == "nnls"){
 
@@ -465,7 +465,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
         RESULTS = apply(RESULTS,2,function(x) x/sum(x)) #explicit STO constraint
         print(head(RESULTS))
 
-    } else if (method == "Janus"){ #Mohammad's transformation, NOT USING MARKER INFO!
+    } else if (method == "Janus"){ 
             
         # Transforming T :
         Z = bulkC.fromSC(scC = C, phenoDataC = phenoDataC)
