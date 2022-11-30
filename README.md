@@ -157,7 +157,7 @@ R example call
 
 ```
 
-Rscript MASTER.R ~/Downloads/deconv_matching_bulk_scnRNA/Toy_example TPM TPM nnls no
+Rscript MASTER.R ~/Downloads/deconv_matching_bulk_scnRNA/Toy_example TPM TPM SQUID no
 
 ```
 
