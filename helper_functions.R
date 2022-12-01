@@ -475,7 +475,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
         X.new <- apply(X.new,2,function(x) ifelse(x < 0, 0, x))
         X.new[!is.finite(X.new)] <- 0 # explicit non-negativity constraint 
         
-        # m.DWLS : full matrix + Mohammad's transformation
+        # take common genes
         Genes <- intersect(rownames(Z),rownames(X.new))
 
         X.new <- as.matrix.Vector(X.new[Genes,])
