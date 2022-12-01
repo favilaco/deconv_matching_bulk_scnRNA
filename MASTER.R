@@ -214,7 +214,7 @@ T <- Scaling(matrix = T, option = mix.normalization)
 ## Seurat - FindAllMarkers (Wilcoxon) on TMM normalized scRNA-seq/snRNA-seq 
 # MuSiC & DWLS: without markers
 
-if(!method %in% c("MuSiC", "DWLS", "Janus")){
+if(!method %in% c("MuSiC", "DWLS", "SQUID")){
 
 	if(! file.exists("./markers_TMM_FC1.5_Seuratwilcox.rds")){
 
