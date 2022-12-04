@@ -133,7 +133,7 @@ transformation2 <- function(X, Y, X.all=X) {
   # explicit non-negativity constraint:
   X.new = apply(X.new,2,function(x) ifelse(x < 0, 0, x)) 
 
-  rownames(X.new)=rownames(X); colnames(X.new) = colnames(X)
+  rownames(X.new) = rownames(X); colnames(X.new) = colnames(X)
 
   return(X.new)
 
@@ -472,8 +472,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
         Y = Z %*% P
 
         X.new = transformation2(X = X, Y = Y, X.all = X)
-        X.new <- apply(X.new,2,function(x) ifelse(x < 0, 0, x))
-        X.new[!is.finite(X.new)] <- 0 # explicit non-negativity constraint 
+        X.new[!is.finite(X.new)] <- 0 
         
         # take common genes
         Genes <- intersect(rownames(Z),rownames(X.new))
