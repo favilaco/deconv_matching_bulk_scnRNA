@@ -105,37 +105,70 @@ collapsing <- function(input, duplicated.names){
 
 
 
-transformation2 <- function(X, Y, X.all=X) {
+transformation2 <- function(X, Y, leave.one.out = TRUE) {
 
-  # use the same genes for all input datasets
-  Genes <- intersect(row.names(Y), intersect(row.names(X),row.names(X.all)))
+    # use the same genes for all input datasets
+    Genes <- intersect(row.names(Y), row.names(X))
 
-  X <- as.matrix(X[Genes,])
-  X.all <- as.matrix(X.all[Genes,])
-  Y <- as.matrix(Y[Genes,])
+    X <- as.matrix(X[Genes,])
+    Y <- as.matrix(Y[Genes,])
 
-  # transforming over genes
-  X.new <- matrix(0, nrow=dim(X)[1], ncol=dim(X)[2])
+    if(leave.one.out){
 
-  for (i in 1:dim(X)[1]){
+        pred <- intersect(colnames(X), colnames(Y)) # matching samples with sc and bulk data
+        X.new <- matrix(0, nrow=dim(X)[1], ncol=length(pred))
 
-    y <- Y[i,]
-    x <- X[i,]
-    x.all <- X.all[i,]
-    l <- length(y)
-    sigma_j <- sd(y)*sqrt((l-1)/(l+1))
-    x.new <- (x-mean(x.all))/sd(x.all) 
-    x.new <- x.new*sigma_j + mean(y)
-    X.new[i,] <- x.new
+        for(j in 1:length(pred)){
 
-  }
+            X.train <- as.matrix(X[,pred[-j]])
+            X.test <- as.matrix(X[,pred[j]])
+            Y.train <- as.matrix(Y[,pred])
 
-  # explicit non-negativity constraint:
-  X.new = apply(X.new,2,function(x) ifelse(x < 0, 0, x)) 
+            # track the mean and sd after leaving one out:
+            X.mean <- rowMeans(X.train)
+            X.sd <- apply(X.train,1,sd) 
+            Y.mean <- rowMeans(Y)
+            Y.sd <- apply(Y,1,sd)
 
-  rownames(X.new) = rownames(X); colnames(X.new) = colnames(X)
+            for (i in 1:dim(X)[1]){
 
-  return(X.new)
+                # transforming over genes
+                x <- X.test[i]
+                sigma_j <- Y.sd[i]*sqrt((length(Y[i,])-1)/(length(Y[i,])+1))
+                x.new <- (x-X.mean[i])/X.sd[i]
+                x.new <- x.new*sigma_j + Y.mean[i]
+
+                X.new[i,j] <- x.new
+
+            }
+
+        }
+
+    } else {
+
+        # transforming over genes
+        X.new <- matrix(0, nrow=dim(X)[1], ncol=dim(X)[2])
+
+        for (i in 1:dim(X)[1]){
+
+            y <- Y[i,]
+            x <- X[i,]
+            l <- length(y)
+            sigma_j <- sd(y)*sqrt((l-1)/(l+1))
+            x.new <- (x-mean(x))/sd(x)
+            x.new <- x.new*sigma_j + mean(y)
+            X.new[i,] <- x.new
+
+        }
+
+    }
+
+    # explicit non-negativity constraint:
+    X.new = apply(X.new,2,function(x) ifelse(x < 0, 0, x))
+
+    rownames(X.new) = rownames(X); colnames(X.new) = colnames(X)
+
+    return(X.new)
 
 }
 
@@ -471,7 +504,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
         P <- as.matrix(P[base::colnames(Z),,drop = FALSE])
         Y = Z %*% P
 
-        X.new = transformation2(X = X, Y = Y, X.all = X)
+        X.new = transformation2(X = X, Y = Y, leave.one.out = FALSE)
         X.new[!is.finite(X.new)] <- 0 
         
         # take common genes
