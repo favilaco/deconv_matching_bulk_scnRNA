@@ -327,7 +327,10 @@ if(length(grep("[A-Z|a-z]", colnames(P))) == 0){colnames(P) <- paste("X",colname
 ## Remove NA values (if any) after row.name interconversion
 if(sum(is.na(rownames(T))) != 0){T = T[!is.na(rownames(T)), ]}
 
-#To avoid MAST-DWLS to be repeated!
+P = P[,gtools::mixedsort(colnames(P))]
+T = T[,gtools::mixedsort(colnames(T))]
+
+# To avoid MAST-DWLS to be repeated!
 if(method == "DWLS"){STRING <- paste("DWLS", ref.normalization, sep = "_")} 
 
 if(method %in% c("CIBERSORT", "RLR", "FARDEEP", "nnls")){
@@ -337,7 +340,7 @@ if(method %in% c("CIBERSORT", "RLR", "FARDEEP", "nnls")){
 	                        method = method,
 	                        phenoDataC = phenoDataC,
 	                        P = P, 
-							STRING = STRING,
+				STRING = STRING,
 	                        marker_distrib = markers, 
 	                        refProfiles.var = NULL)
 	
@@ -348,7 +351,7 @@ if(method %in% c("CIBERSORT", "RLR", "FARDEEP", "nnls")){
                         method = method,
                         phenoDataC = phenoDataC,
                         P = P, 
-						STRING = STRING,
+			STRING = STRING,
                         marker_distrib = markers, 
                         refProfiles.var = NULL)
 
