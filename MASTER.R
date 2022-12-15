@@ -114,7 +114,7 @@ if(cell.type.info.present == "no"){
 		cds <- monocle3::new_cell_data_set(scC)
 		cds <- monocle3::preprocess_cds(cds, num_dim = 100, norm_method = "log", method = "PCA", scaling = TRUE)
 		cds <- monocle3::reduce_dimension(cds, max_components = 2, umap.metric = "cosine", umap.fast_sgd = FALSE, preprocess_method = 'PCA') 
-		cds <- monocle3::cluster_cells(cds, k = 6, resolution = NULL, partition_qval = 0.05, num_iter = 1) #with resolution = NULL, the parameter is determined automatically
+		cds <- monocle3::cluster_cells(cds, k = 20, resolution = NULL, partition_qval = 0.05, num_iter = 1) #with resolution = NULL, the parameter is determined automatically
 
 		Monocle3_metadata <- data.frame(cellID = names(cds@clusters$UMAP$clusters), cellType = paste("cluster",  cds@clusters$UMAP$clusters, sep ="."))
 		phenoDataC$clusterID <- Monocle3_metadata$cellType
@@ -181,6 +181,11 @@ if(cell.type.info.present == "no"){
 	phenoDataC <- phenoDataC[match(colnames(scC),phenoDataC$cellID),]
 
 }
+
+## Ensure that phenoDataC & scC have the same (& ordered) cells [for cases where users will provide a foreign "phenoDataC_clusters_after_regrouping.txt" as input]:
+common.cells = intersect(phenoDataC$cellID,colnames(scC))
+scC = scC[, common.cells]
+phenoDataC = phenoDataC[match(common.cells, phenoDataC$cellID),]
 
 # Create matrix C (made with the mean expression values for all cells across cell types)
 cellType <- phenoDataC$cellType
@@ -330,7 +335,7 @@ if(sum(is.na(rownames(T))) != 0){T = T[!is.na(rownames(T)), ]}
 P = P[,gtools::mixedsort(colnames(P))]
 T = T[,gtools::mixedsort(colnames(T))]
 
-# To avoid MAST-DWLS to be repeated!
+#To avoid MAST-DWLS to be repeated!
 if(method == "DWLS"){STRING <- paste("DWLS", ref.normalization, sep = "_")} 
 
 if(method %in% c("CIBERSORT", "RLR", "FARDEEP", "nnls")){
@@ -363,7 +368,7 @@ RESULTS$ref.normalization <- ref.normalization
 RESULTS$mix.normalization <- mix.normalization
 
 ann_text.global = RESULTS %>% dplyr::summarise(RMSE = sqrt(mean((observed_fraction - expected_fraction)^2)) %>% round(.,3), 
-									   		   Pearson = cor(observed_fraction, expected_fraction) %>% round(.,3))
+					       Pearson = cor(observed_fraction, expected_fraction) %>% round(.,3))
 
 label = paste("Pearson = ", ann_text.global$Pearson, "\n RMSE = ", ann_text.global$RMSE, sep = "")
 
