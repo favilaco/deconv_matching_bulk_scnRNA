@@ -1,6 +1,6 @@
 Source code (R statistical programming language, v4.0.1) to reproduce the results described in the article:
 
-> *Avila Cobos F...* **Effective methods for bulk RNA-seq deconvolution using scRNA-seq and snRNA-seq derived transcriptomes** *(bioRxiv; https://doi.org/...)*
+> <em> Francisco Avila Cobos, Mohammad Javad Najaf Panah, Jessica Epps, Xiaochen Long, Tsz-Kwong Man, Hua-Sheng Chiu, Elad Chomsky, Evgeny Kiner, Michael J Krueger, Diego di Bernardo, Luis Voloch, Jan Molenaar, Sander R. van Hooff, Frank Westermann, Selina Jansky, Michele L. Redell, Pieter Mestdagh, Pavel Sumazin</em> **Effective methods for bulk RNA-Seq deconvolution using scnRNA-Seq transcriptomes** *(bioRxiv; https://www.biorxiv.org/content/10.1101/2022.12.13.520241v2)*
 
 DATASETS
 ========
@@ -8,14 +8,14 @@ Here we provide an **example folder** (named "Toy_example"; see *"Folder require
 
 The **other external datasets used in the manuscript** (together with the necessary metadata) can be downloaded from their respective sources:
 
-* Cell_mixtures:
-* GSE141115: https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE141115&format=file ; additional sample metadata information in "additional_data/Denisenko_crosstable_bulk_sc_sn_14092021".
-* AML:
-* Breast_cancer: GSE176078 ("GSE176078_RAW.tar" from "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE176078&format=file")
-* NB_1:
-* NB_2:
+* Cell_mixtures: GEO GSE220608
+* Kidney: GEO GSE141115 (https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE141115&format=file) ; additional sample metadata information in "additional_data/Denisenko_crosstable_bulk_sc_sn_14092021".
+* AML: GEO GSE220608
+* Breast_cancer: GEO GSE176078 ("GSE176078_RAW.tar" from "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE176078&format=file")
+* NB_1: EGAS00001004349; 
+* NB_2: EGAS00001006723; EGAS00001006823; GEO GSE218450
 * Synapse: syn8691134; syn23554292; syn23554293; syn23554294
-* Brain: GSE67835 ("GSE67835_RAW.tar" from https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE67835&format=file) & IHC proportions (re-scaled to sum-to-one) present here: https://github.com/ellispatrick/CortexCellDeconv/tree/master/CellTypeDeconvAnalysis/Data [IHC.astro.txt, IHC.endo.txt, IHC.microglia.txt, IHC.neuro.txt; IHC.oligo.txt]
+* Brain: GEO GSE67835 ("GSE67835_RAW.tar" from https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE67835&format=file) & IHC proportions (re-scaled to sum-to-one) present here: https://github.com/ellispatrick/CortexCellDeconv/tree/master/CellTypeDeconvAnalysis/Data [IHC.astro.txt, IHC.endo.txt, IHC.microglia.txt, IHC.neuro.txt; IHC.oligo.txt]
 
 
 The following line is needed for fresh installations of Linux (Debian):
@@ -26,7 +26,6 @@ R 4.0.1: REQUIRED PACKAGES AND PACKAGE DEPENDENCIES:
 ===================================================
 Packages to be installed (alphabetically ordered) before running any deconvolution (**R >= 4.0.1**):
 ```
-
 AnnotationDbi
 Biobase
 CIBERSORT
@@ -66,7 +65,6 @@ SingleCellExperiment
 tidyr
 tidyverse
 viridis
-
 ```
 
 
@@ -99,7 +97,6 @@ a) Folder structure:
 
 **NOTE**: The gold standard matrix of proportions ("P") is either present or obtained as the sum of individual cells across each cell type.
 
-
 ```
 .
 ├── AML
@@ -109,14 +106,14 @@ a) Folder structure:
 ├── Brain
 │   ├── scC.rds
 │   ├── T.rds
-│   ├── P.rds (from IHC)
+│   ├── P.rds #from IHC
 │   ├── phenoDataC_clusters_wo_regrouping.txt
 ├── Toy_example
 │   ├── scC.rds
 │   ├── T.rds
 │   ├── P.rds
 │   ├── phenoDataC_clusters_wo_regrouping.txt
-│   └── markers_TMM_FC1.5_Seuratwilcox.rds (if not present will be created)
+│   └── markers_TMM_FC1.5_Seuratwilcox.rds #(if not present will be created)
 ... 
 │
 ├── helper_functions.R
@@ -143,17 +140,25 @@ The deconvolution problem is formulated as: T = C·P [see https://doi.org/10.109
 Make the following choices (in order):
 
 ```
-	i) specific dataset [from: "Toy_example","Cell_mixtures", "GSE141115", "AML", "Breast_cancer", "NB_1", "NB_2", "Synapse", "Brain"]
+	i) specific dataset [from: "Toy_example","Cell_mixtures", "Kidney", "AML", "Breast_cancer", "NB_1", "NB_2", "Synapse", "Brain"]
 	ii) normalization strategy for the reference matrix [bulk (C): "none", "LogNormalize", "TMM", "TPM"] ; [single-cell: "none", "LogNormalize", "TMM", "TPM", "SCTransform", "scran", "scater"]
 	iii) normalization strategy for the mixture matrix (T)["none", "LogNormalize", "TMM", "TPM"]
 	iv) deconvolution method [from: "CIBERSORT", "nnls", "FARDEEP", "RLR", "MuSiC", "MuSiC_with_markers", "DWLS", "SQUID"]
 	v) indicate whether cell-type labels are included ("yes") or whether they should be obtained by unsupervised clustering ("no")
 ```
 
+**NOTE: To systematically test the benefit of bulk transformation and deconvolution with SQUID, a leave-one-out cross-validation strategy can also be used: iteratively, concurrent RNA-Seq and scnRNA-Seq profiles of all but one of the samples were used to predict the composition of the remaining sample based on its bulk RNA-Seq profile. By default, all available data is used at once, but this approach can be tried out by using "leave.one.out = TRUE" as a parameter of the function "transformation2" that is used inside SQUID (line 507 inside "helper_functions.R")**
+
+
 R example call
 ===============
 
+**MINIMUM REQUIREMENTS**: matching scnRNA-seq **("scC.rds")** and bulk RNA-seq **("T.rds")** samples together with the correspoinding metadata **("phenoDataC_clusters_wo_regrouping.txt")**. 
+
+**OPTIONAL**: if users have gold standard proportion estimates from IHC or other techniques, they can include such information as **"P.rds"** (this will avoid re-computing the proportions directly from the scnRNA-seq data). If users wish to provide their own re-clustering or set of cell type labels, they can include this as a file named **"phenoDataC_clusters_after_regrouping.txt"** (see Toy_example/phenoDataC_clusters_after_regrouping.txt for an example).
+
 **NOTE**: Each single-cell RNA-seq dataset ("scC.rds") and mixture ("T.rds") should be **RAW integer MATRICES** containing genomic features as rows.
+
 
 ```
 
