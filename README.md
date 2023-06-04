@@ -80,7 +80,7 @@ While our work has a **BSD (3-clause)** license, you **may need** to obtain a li
 | CIBERSORT | Newman, A. M. et al. Robust enumeration of cell subsets from tissue expression profiles. Nat. Methods 12, 453–457 (2015) |
 |--------|----------|
 | DWLS | Tsoucas, D. et al. Accurate estimation of cell-type composition from gene expression data. Nat. Commun. 10, 1–9 (2019) |
-| BisqueRNA | Jew, B. et al. Accurate estimation of cell composition in bulk expression through robust integration of single-cell information. Nat. Commun. 11, 1971  (2020) |
+| Bisque | Jew, B. et al. Accurate estimation of cell composition in bulk expression through robust integration of single-cell information. Nat. Commun. 11, 1971  (2020) |
 | MuSiC | Wang, X., Park, J., Susztak, K., Zhang, N. R. & Li, M. Bulk tissue cell type deconvolution with multi-subject single-cell expression reference. Nat. Commun. 10, 380 (2019) |
 |--------|----------|
 | SCTransform / regularized negative binomial regression (RNBR) | Hafemeister, C. & Satija, R. Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression. Genome Biology (2019) doi:10.1186/s13059-019-1874-1 |
