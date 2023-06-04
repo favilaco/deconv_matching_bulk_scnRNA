@@ -465,6 +465,16 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
         RESULTS = t(MuSiC::music_prop(bulk.eset = T.eset, sc.eset = C.eset, clusters = 'cellType',
                                             markers = unique(marker_distrib$gene), normalize = FALSE, samples = 'SubjectName', 
                                             verbose = F)$Est.prop.weighted)
+    
+    } else if (method == "Bisque"){#By default, Bisque uses all genes for decomposition. However, you may supply a list of genes (such as marker genes) to be used with the markers parameter
+
+        require(BisqueRNA)
+        RESULTS <- BisqueRNA::ReferenceBasedDecomposition(T.eset, C.eset, markers = NULL, use.overlap = FALSE)$bulk.props 
+
+    } else if (method == "Bisque_with_markers"){#By default, Bisque uses all genes for decomposition. However, you may supply a list of genes (such as marker genes) to be used with the markers parameter
+
+        require(BisqueRNA)
+        RESULTS <- BisqueRNA::ReferenceBasedDecomposition(T.eset, C.eset, markers = marker_distrib$gene, use.overlap = FALSE)$bulk.props 
 
     } else if (method == "DWLS"){
         
