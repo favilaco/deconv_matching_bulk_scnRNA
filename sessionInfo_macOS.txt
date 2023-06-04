@@ -45,7 +45,7 @@ other attached packages:
 [55] varhandle_2.0.5             ROCR_1.0-11
 [57] SeuratObject_4.0.2          Seurat_4.0.3
 [59] e1071_1.7-9                 reshape_0.8.8
-[61] quadprog_1.5-8
+[61] quadprog_1.5-8              BisqueRNA_1.0.5
 
 loaded via a namespace (and not attached):
   [1] SparseM_1.81              scattermore_0.7
