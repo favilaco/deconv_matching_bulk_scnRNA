@@ -2,6 +2,11 @@ Source code (R statistical programming language, v4.0.1) to reproduce the result
 
 > <em> Francisco Avila Cobos, Mohammad Javad Najaf Panah, Jessica Epps, Xiaochen Long, Tsz-Kwong Man, Hua-Sheng Chiu, Elad Chomsky, Evgeny Kiner, Michael J Krueger, Diego di Bernardo, Luis Voloch, Jan Molenaar, Sander R. van Hooff, Frank Westermann, Selina Jansky, Michele L. Redell, Pieter Mestdagh, Pavel Sumazin</em> **Effective methods for bulk RNA-Seq deconvolution using scnRNA-Seq transcriptomes** *(bioRxiv; https://www.biorxiv.org/content/10.1101/2022.12.13.520241v2)*
 
+SQUID as standalone R package
+========
+Please go here to detailed instructions for its installation:
+> https://github.com/favilaco/deconv_matching_bulk_scnRNA/tree/master/SQUID
+
 DATASETS
 ========
 Here we provide an **example folder** (named "Toy_example"; see *"Folder requirements" & "Running the deconvolution"*) that can be directly used to test the framework. It contains an artificial single-cell RNA-seq dataset made of 5 artificial cell types where two of them are highly correlated (cell type 1 and 5); 1000 cells per cell type and 64 genes (of which 16 are marker genes, 4 per cell type and in different ranges of expression).
