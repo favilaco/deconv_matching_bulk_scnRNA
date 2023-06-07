@@ -1,0 +1,15 @@
+Package: SQUID
+Type: Package
+Title: Single-cell RNA Quantity Informed Deconvolution (SQUID)
+Version: 0.1.0
+Year: 2023
+Author: Francisco Avila Cobos, Mohammad Javad Najaf Panah, ..., Pieter Mestdagh, Pavel Sumazin
+Maintainer: Francisco Avila Cobos <favil90@gmail.com> and Mohammad Javad Najaf Panah <mohammadjavad.najafpanah@bcm.edu>
+Description: SQUID executes a combination of RNA-Seq transformation and dampened weighted least-squares deconvolution approaches in predicting the composition of 
+  cell mixtures and tissue samples based on concurrent RNA-Seq and scnRNA-Seq profiles. To systematically test the benefit of bulk transformation and deconvolution 
+  with SQUID, a leave-one-out cross-validation strategy can also be used; iteratively, concurrent RNA-Seq and scnRNA-Seq profiles of all but one of the samples were 
+  used to predict the composition of the remaining sample based on its bulk RNA-Seq profile.
+Data: SQUID_Toy_Example_Data.RData
+License: MIT
+Encoding: UTF-8
+LazyData: true
