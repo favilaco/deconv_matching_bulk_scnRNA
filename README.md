@@ -38,6 +38,7 @@ data.table
 devtools
 doMC
 dplyr
+DWLS
 edgeR
 egg
 foreach
