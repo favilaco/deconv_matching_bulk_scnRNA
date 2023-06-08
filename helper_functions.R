@@ -1,4 +1,3 @@
-devtools::source_url("https://github.com/favilaco/DWLS/blob/master/Deconvolution_functions.R?raw=TRUE") # implementing Ryan Walker answer from "https://stackoverflow.com/questions/28381855/r-function-solve-qp-error-constraints-are-inconsistent-no-solution"
 #source("./CIBERSORT.R")
 
 regroup.cor <- function(correlation.matrix, correlation.threshold = 0.95){
@@ -484,7 +483,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
 
         if(!file.exists(paste(path,"Sig.RData",sep="/"))){
 
-            Signature <- buildSignatureMatrixMAST(scdata = C, id = as.character(phenoDataC$cellType), path = path, diff.cutoff = 0.5, pval.cutoff = 0.01)
+            Signature <- DWLS::buildSignatureMatrixMAST(scdata = C, id = as.character(phenoDataC$cellType), path = path, diff.cutoff = 0.5, pval.cutoff = 0.01)
 
         } else {#re-load signature and remove CT column + its correspondent markers
 
@@ -497,8 +496,8 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
         
         RESULTS <- apply(T, 2, function(x){
             b = setNames(x, rownames(T))
-            tr <- trimData(Signature, b)
-            RES <- t(solveDampenedWLS(tr$sig, tr$bulk))
+            tr <- DWLS::trimData(Signature, b)
+            RES <- t(DWLS::solveDampenedWLS(tr$sig, tr$bulk))
         })
 
         rownames(RESULTS) <- as.character(unique(phenoDataC$cellType))
@@ -524,9 +523,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
         Z <- as.matrix.Vector(Z[Genes,])
 
         RESULTS <- apply(X.new, 2, function(x){
-            b = setNames(x, rownames(X.new))
-            tr <- trimData(Z, b)
-            RES <- t(solveDampenedWLS(S = Z, B = x))
+            RES <- t(DWLS::solveDampenedWLS(S = Z, B = x))
         })
 
         rownames(RESULTS) <- colnames(Z)
