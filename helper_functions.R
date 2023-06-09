@@ -420,7 +420,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
 
     if(method == "CIBERSORT"){ 
 
-        source("./CIBERSORT.R")
+        #source("./CIBERSORT.R")
         RESULTS = CIBERSORT(sig_matrix = C, mixture_file = T, QN = FALSE) 
         RESULTS = t(RESULTS[,1:(ncol(RESULTS)-3),drop=FALSE]) 
 
