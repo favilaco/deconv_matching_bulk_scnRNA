@@ -1,5 +1,3 @@
-#source("./CIBERSORT.R")
-
 regroup.cor <- function(correlation.matrix, correlation.threshold = 0.95){
 
       top.cor <- which(abs(correlation.matrix) >= correlation.threshold & row(correlation.matrix) < col(correlation.matrix), arr.ind = TRUE)
@@ -379,7 +377,7 @@ Scaling <- function(matrix, option, phenoDataC=NULL){
 Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRING = NULL, marker_distrib, refProfiles.var){ 
 
     bulk_methods = c("CIBERSORT","nnls","FARDEEP","RLR")
-    sc_methods = c("MuSiC","MuSiC_with_markers","DWLS","SQUID")
+    sc_methods = c("MuSiC","MuSiC_with_markers","DWLS","SQUID", "Bisque", "Bisque_with_markers")
 
     ########## Using marker information for bulk_methods
 
@@ -402,7 +400,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
         # establish same order in (sc)C and phenoDataC:
         phenoDataC <- phenoDataC[match(colnames(C),phenoDataC$cellID),]
 
-        if(method %in% c("MuSiC","MuSiC_with_markers")){
+        if(method %in% c("MuSiC","MuSiC_with_markers", "Bisque", "Bisque_with_markers")){
 
             require(xbioc)
             C.eset <- Biobase::ExpressionSet(assayData = as.matrix(C), phenoData = Biobase::AnnotatedDataFrame(phenoDataC))
@@ -422,6 +420,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
 
     if(method == "CIBERSORT"){ 
 
+        source("./CIBERSORT.R")
         RESULTS = CIBERSORT(sig_matrix = C, mixture_file = T, QN = FALSE) 
         RESULTS = t(RESULTS[,1:(ncol(RESULTS)-3),drop=FALSE]) 
 
@@ -435,7 +434,6 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
     } else if (method == "FARDEEP"){
 
         require(FARDEEP)
-
         RESULTS = t(FARDEEP::fardeep(C, T, nn = TRUE, intercept = TRUE, permn = 10, QN = FALSE)$abs.beta)
         RESULTS = apply(RESULTS,2,function(x) x/sum(x)) #explicit STO constraint
         # These 2 lines are similar as retrieving $relative.beta instead of abs.beta + re-scaling
@@ -463,7 +461,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
         require(MuSiC)
         RESULTS = t(MuSiC::music_prop(bulk.eset = T.eset, sc.eset = C.eset, clusters = 'cellType',
                                             markers = unique(marker_distrib$gene), normalize = FALSE, samples = 'SubjectName', 
-                                            verbose = F)$Est.prop.weighted)
+                                           verbose = F)$Est.prop.weighted)
     
     } else if (method == "Bisque"){#By default, Bisque uses all genes for decomposition. However, you may supply a list of genes (such as marker genes) to be used with the markers parameter
 
@@ -477,6 +475,7 @@ Deconvolution <- function(T, C, method, phenoDataC, P = NULL, elem = NULL, STRIN
 
     } else if (method == "DWLS"){
         
+        require(DWLS)
         path = paste(getwd(),"/results_",STRING,sep="")
 
         if(! dir.exists(path)){ dir.create(path) } #to avoid repeating marker_selection step when removing cell types; Sig.RData automatically created
